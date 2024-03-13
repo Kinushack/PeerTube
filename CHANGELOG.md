@@ -1,5 +1,12 @@
 # Changelog
 
+## v5.2.2-KinuRel
+
+### Bug fixes
+
+ * Fix uploading same video error
+ * Fix ERR_HTTP_HEADERS_SENT
+
 ## v5.2.1
 
 ### Bug fixes
