@@ -24,12 +24,12 @@ if [ -z "$GITHUB_TOKEN" ]; then
   exit -1
 fi
 
-maintainer_public_key=${MAINTAINER_GPG:-"583A612D890159BE"}
+maintainer_public_key=${MAINTAINER_GPG:-"A385614AE582A070"}
 
 peertube_directory=$(basename $(pwd))
 
 branch=$(git symbolic-ref --short -q HEAD)
-if [ "$branch" != "develop" ] && [[ "$branch" != release/* ]]; then
+if [ "$branch" != "develop-v5" ] && [[ "$branch" != release/* ]]; then
   echo "Need to be on develop or release branch."
   exit -1
 fi
@@ -99,18 +99,18 @@ rm -f "./client/dist/embed-stats.json"
   git push origin --tag
 
   if [ -z "$github_prerelease_option" ]; then
-    github-release release --user chocobozzz --repo peertube --tag "$version" --name "$version" --description "$changelog"
+    github-release release --user kinuseka --repo peertube --tag "$version" --name "$version" --description "$changelog"
   else
-    github-release release --user chocobozzz --repo peertube --tag "$version" --name "$version" --description "$changelog" "$github_prerelease_option"
+    github-release release --user kinuseka --repo peertube --tag "$version" --name "$version" --description "$changelog" "$github_prerelease_option"
   fi
 
   # Wait for the release to be published, we had some issues when the files were not uploaded because of "unknown release" error
   sleep 2
 
-  github-release upload --user chocobozzz --repo peertube --tag "$version" --name "$zip_name" --file "$zip_name"
-  github-release upload --user chocobozzz --repo peertube --tag "$version" --name "$zip_name.asc" --file "$zip_name.asc"
-  github-release upload --user chocobozzz --repo peertube --tag "$version" --name "$tar_name" --file "$tar_name"
-  github-release upload --user chocobozzz --repo peertube --tag "$version" --name "$tar_name.asc" --file "$tar_name.asc"
+  github-release upload --user kinuseka --repo peertube --tag "$version" --name "$zip_name" --file "$zip_name"
+  github-release upload --user kinuseka --repo peertube --tag "$version" --name "$zip_name.asc" --file "$zip_name.asc"
+  github-release upload --user kinuseka --repo peertube --tag "$version" --name "$tar_name" --file "$tar_name"
+  github-release upload --user kinuseka --repo peertube --tag "$version" --name "$tar_name.asc" --file "$tar_name.asc"
 
   git push origin "$branch"
 
