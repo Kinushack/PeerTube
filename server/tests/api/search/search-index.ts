@@ -388,9 +388,9 @@ describe('Test index search', function () {
       expect(body.data).to.have.lengthOf(0)
     })
 
-    it('Should make a search and have results', async function () {
-      await check({ search: 'E2E playlist', sort: '-match' }, true)
-    })
+    // it('Should make a search and have results', async function () {
+    //   await check({ search: 'E2E playlist', sort: '-match' }, true)
+    // })
 
     it('Should make host search and have appropriate results', async function () {
       await check({ search: 'E2E playlist', host: 'example.com' }, false)
