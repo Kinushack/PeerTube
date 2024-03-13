@@ -138,7 +138,8 @@ declare module 'express' {
 
       videoFile?: MVideoFile
 
-      videoFileResumable?: EnhancedUploadXFile
+      uploadVideoFileResumable?: UploadNewVideoUploadXFile
+      updateVideoFileResumable?: EnhancedUploadXFile
 
       videoImport?: MVideoImportDefault
 

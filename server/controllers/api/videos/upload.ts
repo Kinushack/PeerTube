@@ -108,12 +108,13 @@ async function addVideoLegacy (req: express.Request, res: express.Response) {
 }
 
 async function addVideoResumable (req: express.Request, res: express.Response) {
-  const videoPhysicalFile = res.locals.videoFileResumable
+  const videoPhysicalFile = res.locals.uploadVideoFileResumable
   const videoInfo = videoPhysicalFile.metadata
   const files = { previewfile: videoInfo.previewfile }
 
   const response = await addVideo({ req, res, videoPhysicalFile, videoInfo, files })
-  await Redis.Instance.setUploadSession(req.query.upload_id, response)
+  await Redis.Instance.deleteUploadSession(req.query.upload_id)
+  await uploadx.storage.delete(res.locals.uploadVideoFileResumable)
 
   return res.json(response)
 }

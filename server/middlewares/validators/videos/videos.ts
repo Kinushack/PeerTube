@@ -1,6 +1,5 @@
 import express from 'express'
 import { body, header, param, query, ValidationChain } from 'express-validator'
-import { isTestInstance } from '@server/helpers/core-utils'
 import { getResumableUploadPath } from '@server/helpers/upload'
 import { Redis } from '@server/lib/redis'
 import { getServerActor } from '@server/models/application/application'
@@ -113,22 +112,11 @@ const videosAddResumableValidator = [
     const sessionExists = await Redis.Instance.doesUploadSessionExist(uploadId)
 
     if (sessionExists) {
-      const sessionResponse = await Redis.Instance.getUploadSession(uploadId)
-
-      if (!sessionResponse) {
-        res.setHeader('Retry-After', 300) // ask to retry after 5 min, knowing the upload_id is kept for up to 15 min after completion
-
-        return res.fail({
-          status: HttpStatusCode.SERVICE_UNAVAILABLE_503,
-          message: 'The upload is already being processed'
-        })
-      }
-
-      if (isTestInstance()) {
-        res.setHeader('x-resumable-upload-cached', 'true')
-      }
-
-      return res.json(sessionResponse)
+      res.setHeader('Retry-After', 300) // ask to retry after 5 min, knowing the upload_id is kept for up to 15 min after completion
+      return res.fail({
+        status: HttpStatusCode.SERVICE_UNAVAILABLE_503,
+        message: 'The upload is already being processed'
+      })
     }
 
     await Redis.Instance.setUploadSession(uploadId)
@@ -149,7 +137,7 @@ const videosAddResumableValidator = [
 
     if (!await isVideoAccepted(req, res, file)) return cleanup()
 
-    res.locals.videoFileResumable = { ...file, originalname: file.filename }
+    res.locals.uploadVideoFileResumable = { ...file, originalname: file.filename }
 
     return next()
   }
